@@ -2,6 +2,8 @@
 APIUtils
 ========
 [![codecov](https://codecov.io/gh/JoeReid/apiutils/branch/master/graph/badge.svg)](https://codecov.io/gh/JoeReid/apiutils)
+[![Go Report Card](https://goreportcard.com/badge/github.com/JoeReid/apiutils)](https://goreportcard.com/report/github.com/JoeReid/apiutils)
+[![GoDoc](https://godoc.org/github.com/JoeReid/apiutils?status.svg)](https://godoc.org/github.com/JoeReid/apiutils)
 
 A handy collection of utility libs for designing apis in go
 
