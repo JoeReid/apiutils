@@ -1,4 +1,4 @@
-package render
+package apiutils
 
 import (
 	"context"
@@ -111,5 +111,3 @@ type Codec interface {
 	// Read will attempt to decode the body of a request onto the given data interface
 	Read(ctx context.Context, r *http.Request, data interface{}) error
 }
-
-//type CodecHandler func(Codec) http.Handler

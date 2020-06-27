@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/JoeReid/apiutils/render"
+	"github.com/JoeReid/apiutils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -41,6 +41,6 @@ func (y *yamlCodec) Read(ctx context.Context, r *http.Request, data interface{})
 	return y.decoder(r.Body).Decode(data)
 }
 
-func New() render.Codec {
+func New() apiutils.Codec {
 	return &yamlCodec{}
 }

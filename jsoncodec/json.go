@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/JoeReid/apiutils/render"
+	"github.com/JoeReid/apiutils"
 )
 
 type jsonCodec struct {
@@ -58,7 +58,7 @@ func (j *jsonCodec) Read(ctx context.Context, r *http.Request, data interface{})
 	return j.decoder(r.Body).Decode(data)
 }
 
-func New(opts ...func(*jsonCodec)) render.Codec {
+func New(opts ...func(*jsonCodec)) apiutils.Codec {
 	jc := &jsonCodec{}
 
 	for _, opt := range opts {

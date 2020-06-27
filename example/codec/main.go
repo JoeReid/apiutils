@@ -4,16 +4,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JoeReid/apiutils/render"
-	"github.com/JoeReid/apiutils/render/jsoncodec"
-	"github.com/JoeReid/apiutils/render/yamlcodec"
+	"github.com/JoeReid/apiutils"
+	"github.com/JoeReid/apiutils/jsoncodec"
+	"github.com/JoeReid/apiutils/yamlcodec"
 )
 
 type HelloEndpoint struct {
 	// DB etc...
 }
 
-func (h *HelloEndpoint) ServeCodec(c render.Codec, w http.ResponseWriter, r *http.Request) {
+func (h *HelloEndpoint) ServeCodec(c apiutils.Codec, w http.ResponseWriter, r *http.Request) {
 	type Hello struct {
 		Hello string    `json:"hello" yaml:"yamlhello"`
 		Time  time.Time `json:"timestamp" yaml:"yamltimestamp"`
@@ -29,7 +29,7 @@ func (h *HelloEndpoint) ServeCodec(c render.Codec, w http.ResponseWriter, r *htt
 func main() {
 	hello := &HelloEndpoint{}
 
-	http.Handle("/json", render.HandlerWithCodec(jsoncodec.New(), hello))
-	http.Handle("/yaml", render.HandlerWithCodec(yamlcodec.New(), hello))
+	http.Handle("/json", apiutils.HandlerWithCodec(jsoncodec.New(), hello))
+	http.Handle("/yaml", apiutils.HandlerWithCodec(yamlcodec.New(), hello))
 	http.ListenAndServe(":8080", nil)
 }
