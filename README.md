@@ -51,6 +51,16 @@ func main() {
 }
 ```
 
+```
+$ curl 'localhost:8080/json'
+{"hello":"world","timestamp":"2020-06-27T01:29:38.271839357+01:00"}
+
+$ curl 'localhost:8080/yaml'
+yamlhello: world
+yamltimestamp: 2020-06-27T01:29:42.85396202+01:00
+```
+
+
 ### But wait, theres more
 
 Why not let the api consumer decide the format they want
@@ -103,6 +113,15 @@ func main() {
 	http.Handle("/hello", render.HandlerWithSelector(codecSelector, hello))
 	http.ListenAndServe(":8080", nil)
 }
+```
+
+```
+$ curl 'localhost:8080/hello?codec=json'
+{"hello":"world","timestamp":"2020-06-27T01:32:01.945250157+01:00"}
+
+$ curl 'localhost:8080/hello?codec=yaml'
+yamlhello: world
+yamltimestamp: 2020-06-27T01:32:06.962818404+01:00
 ```
 
 Pagination
