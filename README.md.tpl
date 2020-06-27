@@ -1,5 +1,6 @@
 APIUtils
 ========
+[![codecov](https://codecov.io/gh/JoeReid/apiutils/branch/master/graph/badge.svg)](https://codecov.io/gh/JoeReid/apiutils)
 
 A handy collection of utility libs for designing apis in go
 
