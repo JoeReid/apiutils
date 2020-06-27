@@ -1,5 +1,6 @@
 APIUtils
 ========
+![Pipeline](https://github.com/JoeReid/apiutils/workflows/Pipeline/badge.svg)
 [![codecov](https://codecov.io/gh/JoeReid/apiutils/branch/master/graph/badge.svg)](https://codecov.io/gh/JoeReid/apiutils)
 [![Go Report Card](https://goreportcard.com/badge/github.com/JoeReid/apiutils)](https://goreportcard.com/report/github.com/JoeReid/apiutils)
 [![GoDoc](https://godoc.org/github.com/JoeReid/apiutils?status.svg)](https://godoc.org/github.com/JoeReid/apiutils)
