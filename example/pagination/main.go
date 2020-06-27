@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/JoeReid/apiutils/paginate"
+	"github.com/JoeReid/apiutils"
 	"github.com/JoeReid/apiutils/render"
 	"github.com/JoeReid/apiutils/render/jsoncodec"
 	"github.com/JoeReid/apiutils/render/yamlcodec"
@@ -14,7 +14,7 @@ type PaginationExample struct {
 }
 
 func (p *PaginationExample) ServeCodec(c render.Codec, w http.ResponseWriter, r *http.Request) {
-	count, skip, err := paginate.Vars(r, paginate.DefaultCount(10), paginate.MaxCount(10))
+	count, skip, err := apiutils.Paginate(r, apiutils.DefaultCount(10), apiutils.MaxCount(10))
 	if err != nil {
 		c.Respond(r.Context(), w, http.StatusBadRequest, err)
 		return

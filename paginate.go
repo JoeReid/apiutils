@@ -1,17 +1,10 @@
-package paginate
+package apiutils
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
-
-	"github.com/JoeReid/apiutils/render"
 )
-
-type PaginatedHandler func(count, skip int) render.Handler
-
-var ErrBadRequest = errors.New("data in the request was incorrect")
 
 func intFromReq(r *http.Request, key string) (n int, ok bool, err error) {
 	q := r.URL.Query()
@@ -36,7 +29,7 @@ type pagOpts struct {
 	skipSet bool
 }
 
-func Vars(r *http.Request, opts ...func(*pagOpts) error) (count int, skip int, err error) {
+func Paginate(r *http.Request, opts ...func(*pagOpts) error) (count int, skip int, err error) {
 	const (
 		countKey = "count"
 		skipKey  = "skip"
@@ -61,10 +54,10 @@ func Vars(r *http.Request, opts ...func(*pagOpts) error) (count int, skip int, e
 	}
 
 	if po.count <= 0 {
-		return 0, 0, fmt.Errorf("count %d must be > 0: %w", po.count, ErrBadRequest)
+		return 0, 0, fmt.Errorf("paginate error: count %d must be > 0", po.count)
 	}
 	if po.skip < 0 {
-		return 0, 0, fmt.Errorf("skip %d must be >= 0: %w", po.skip, ErrBadRequest)
+		return 0, 0, fmt.Errorf("paginate error: skip %d must be >= 0", po.skip)
 	}
 	return po.count, po.skip, nil
 }
@@ -72,7 +65,7 @@ func Vars(r *http.Request, opts ...func(*pagOpts) error) (count int, skip int, e
 func MaxCount(n int) func(*pagOpts) error {
 	return func(p *pagOpts) error {
 		if p.count > n {
-			return fmt.Errorf("count %d must be < %d: %w", p.count, n, ErrBadRequest)
+			return fmt.Errorf("paginate error: count %d must be < %d", p.count, n)
 		}
 		return nil
 	}
@@ -90,7 +83,7 @@ func DefaultCount(n int) func(*pagOpts) error {
 func MaxSkip(n int) func(*pagOpts) error {
 	return func(p *pagOpts) error {
 		if p.skip > n {
-			return fmt.Errorf("skip %d must be < %d: %w", p.skip, n, ErrBadRequest)
+			return fmt.Errorf("paginate error: skip %d must be < %d", p.skip, n)
 		}
 		return nil
 	}
