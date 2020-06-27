@@ -23,16 +23,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JoeReid/apiutils/render"
-	"github.com/JoeReid/apiutils/render/jsoncodec"
-	"github.com/JoeReid/apiutils/render/yamlcodec"
+	"github.com/JoeReid/apiutils"
+	"github.com/JoeReid/apiutils/jsoncodec"
+	"github.com/JoeReid/apiutils/yamlcodec"
 )
 
 type HelloEndpoint struct {
 	// DB etc...
 }
 
-func (h *HelloEndpoint) ServeCodec(c render.Codec, w http.ResponseWriter, r *http.Request) {
+func (h *HelloEndpoint) ServeCodec(c apiutils.Codec, w http.ResponseWriter, r *http.Request) {
 	type Hello struct {
 		Hello string    `json:"hello" yaml:"yamlhello"`
 		Time  time.Time `json:"timestamp" yaml:"yamltimestamp"`
@@ -48,8 +48,8 @@ func (h *HelloEndpoint) ServeCodec(c render.Codec, w http.ResponseWriter, r *htt
 func main() {
 	hello := &HelloEndpoint{}
 
-	http.Handle("/json", render.HandlerWithCodec(jsoncodec.New(), hello))
-	http.Handle("/yaml", render.HandlerWithCodec(yamlcodec.New(), hello))
+	http.Handle("/json", apiutils.HandlerWithCodec(jsoncodec.New(), hello))
+	http.Handle("/yaml", apiutils.HandlerWithCodec(yamlcodec.New(), hello))
 	http.ListenAndServe(":8080", nil)
 }
 ```
@@ -75,16 +75,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/JoeReid/apiutils/render"
-	"github.com/JoeReid/apiutils/render/jsoncodec"
-	"github.com/JoeReid/apiutils/render/yamlcodec"
+	"github.com/JoeReid/apiutils"
+	"github.com/JoeReid/apiutils/jsoncodec"
+	"github.com/JoeReid/apiutils/yamlcodec"
 )
 
 type HelloEndpoint struct {
 	// DB etc...
 }
 
-func (h *HelloEndpoint) ServeCodec(c render.Codec, w http.ResponseWriter, r *http.Request) {
+func (h *HelloEndpoint) ServeCodec(c apiutils.Codec, w http.ResponseWriter, r *http.Request) {
 	type Hello struct {
 		Hello string    `json:"hello" yaml:"yamlhello"`
 		Time  time.Time `json:"timestamp" yaml:"yamltimestamp"`
@@ -99,21 +99,21 @@ func (h *HelloEndpoint) ServeCodec(c render.Codec, w http.ResponseWriter, r *htt
 
 func main() {
 	// configure all the codec options
-	codecSelector, _ := render.NewRequestSelector(
-		render.RegisterCodec(
+	codecSelector, _ := apiutils.NewRequestSelector(
+		apiutils.RegisterCodec(
 			jsoncodec.New(), "json", "application/json"),
 
-		render.RegisterCodec(
+		apiutils.RegisterCodec(
 			jsoncodec.New(jsoncodec.SetIndent("", "\t")),
 			"json,pretty", "application/json,pretty"),
 
-		render.RegisterCodec(
+		apiutils.RegisterCodec(
 			yamlcodec.New(), "yaml", "application/x-yaml"),
 	)
 
 	// serve all the codecs on a common endpoint
 	hello := &HelloEndpoint{}
-	http.Handle("/hello", render.HandlerWithSelector(codecSelector, hello))
+	http.Handle("/hello", apiutils.HandlerWithSelector(codecSelector, hello))
 	http.ListenAndServe(":8080", nil)
 }
 ```
@@ -140,16 +140,15 @@ import (
 	"net/http"
 
 	"github.com/JoeReid/apiutils"
-	"github.com/JoeReid/apiutils/render"
-	"github.com/JoeReid/apiutils/render/jsoncodec"
-	"github.com/JoeReid/apiutils/render/yamlcodec"
+	"github.com/JoeReid/apiutils/jsoncodec"
+	"github.com/JoeReid/apiutils/yamlcodec"
 )
 
 type PaginationExample struct {
 	// DB etc...
 }
 
-func (p *PaginationExample) ServeCodec(c render.Codec, w http.ResponseWriter, r *http.Request) {
+func (p *PaginationExample) ServeCodec(c apiutils.Codec, w http.ResponseWriter, r *http.Request) {
 	count, skip, err := apiutils.Paginate(r, apiutils.DefaultCount(10), apiutils.MaxCount(10))
 	if err != nil {
 		c.Respond(r.Context(), w, http.StatusBadRequest, err)
@@ -168,13 +167,13 @@ func (p *PaginationExample) ServeCodec(c render.Codec, w http.ResponseWriter, r 
 
 func main() {
 	// configure all the codec options
-	codecSelector, _ := render.NewRequestSelector(
-		render.RegisterCodec(jsoncodec.New(), "json", "application/json"),
-		render.RegisterCodec(yamlcodec.New(), "yaml", "application/x-yaml"),
+	codecSelector, _ := apiutils.NewRequestSelector(
+		apiutils.RegisterCodec(jsoncodec.New(), "json", "application/json"),
+		apiutils.RegisterCodec(yamlcodec.New(), "yaml", "application/x-yaml"),
 	)
 
 	paginate := &PaginationExample{}
-	http.Handle("/paginate", render.HandlerWithSelector(codecSelector, paginate))
+	http.Handle("/paginate", apiutils.HandlerWithSelector(codecSelector, paginate))
 	http.ListenAndServe(":8080", nil)
 }
 ```
