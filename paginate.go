@@ -29,7 +29,7 @@ type pagOpts struct {
 	skipSet bool
 }
 
-func Paginate(r *http.Request, opts ...func(*pagOpts) error) (count int, skip int, err error) {
+func Paginate(r *http.Request, opts ...PaginateOption) (count int, skip int, err error) {
 	const (
 		countKey = "count"
 		skipKey  = "skip"
@@ -62,7 +62,9 @@ func Paginate(r *http.Request, opts ...func(*pagOpts) error) (count int, skip in
 	return po.count, po.skip, nil
 }
 
-func MaxCount(n int) func(*pagOpts) error {
+type PaginateOption func(*pagOpts) error
+
+func MaxCount(n int) PaginateOption {
 	return func(p *pagOpts) error {
 		if p.count > n {
 			return fmt.Errorf("paginate error: count %d must be < %d", p.count, n)
@@ -71,7 +73,7 @@ func MaxCount(n int) func(*pagOpts) error {
 	}
 }
 
-func DefaultCount(n int) func(*pagOpts) error {
+func DefaultCount(n int) PaginateOption {
 	return func(p *pagOpts) error {
 		if !p.countSet {
 			p.count = n
@@ -80,7 +82,7 @@ func DefaultCount(n int) func(*pagOpts) error {
 	}
 }
 
-func MaxSkip(n int) func(*pagOpts) error {
+func MaxSkip(n int) PaginateOption {
 	return func(p *pagOpts) error {
 		if p.skip > n {
 			return fmt.Errorf("paginate error: skip %d must be < %d", p.skip, n)
@@ -89,7 +91,7 @@ func MaxSkip(n int) func(*pagOpts) error {
 	}
 }
 
-func DefaultSkip(n int) func(*pagOpts) error {
+func DefaultSkip(n int) PaginateOption {
 	return func(p *pagOpts) error {
 		if !p.skipSet {
 			p.skip = n

@@ -47,7 +47,7 @@ func (r *requestSelector) For(req *http.Request) Codec {
 	return &unsuportedCodec{codecName}
 }
 
-func NewRequestSelector(opts ...func(r *requestSelector)) (*requestSelector, error) {
+func NewRequestSelector(opts ...RequestSelectorOption) (*requestSelector, error) {
 	const defaultCodecKey = "codec"
 
 	r := &requestSelector{
@@ -71,7 +71,9 @@ func SetCodecURLKey(k string) func(r *requestSelector) {
 	}
 }
 
-func RegisterCodec(c Codec, values ...string) func(r *requestSelector) {
+type RequestSelectorOption func(r *requestSelector)
+
+func RegisterCodec(c Codec, values ...string) RequestSelectorOption {
 	return func(r *requestSelector) {
 		// set default if not already set
 		if _, ok := r.codecs[""]; !ok {
@@ -84,7 +86,7 @@ func RegisterCodec(c Codec, values ...string) func(r *requestSelector) {
 	}
 }
 
-func SetDefaultCodec(c Codec) func(r *requestSelector) {
+func SetDefaultCodec(c Codec) RequestSelectorOption {
 	return func(r *requestSelector) {
 		r.codecs[""] = c
 	}
