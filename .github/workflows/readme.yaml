@@ -1,0 +1,22 @@
+name: Update README
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  update:
+    name: Update README
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Generate README.md
+      run: ./build_readme.sh
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}

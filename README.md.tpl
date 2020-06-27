@@ -16,12 +16,31 @@ e.g. a simple helloworld application
 !!EXEC cat ./example/codec/main.go
 ```
 
+```
+$ curl 'localhost:8080/json'
+{"hello":"world","timestamp":"2020-06-27T01:29:38.271839357+01:00"}
+
+$ curl 'localhost:8080/yaml'
+yamlhello: world
+yamltimestamp: 2020-06-27T01:29:42.85396202+01:00
+```
+
+
 ### But wait, theres more
 
 Why not let the api consumer decide the format they want
 
 ```go
 !!EXEC cat ./example/selector/main.go
+```
+
+```
+$ curl 'localhost:8080/hello?codec=json'
+{"hello":"world","timestamp":"2020-06-27T01:32:01.945250157+01:00"}
+
+$ curl 'localhost:8080/hello?codec=yaml'
+yamlhello: world
+yamltimestamp: 2020-06-27T01:32:06.962818404+01:00
 ```
 
 Pagination
